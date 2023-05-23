@@ -24,11 +24,11 @@ async function seed() {
 
   await Book.create({
     title: 'The Bible',
-    description: 'It\s the Bible',
+    description: 'It is the Bible',
     status: true
   });
   console.log('TheBible was added to database');
+  mongoose.disconnect();
 }
-mongoose.disconnect();
 
 seed();
