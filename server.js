@@ -3,14 +3,16 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
-const { default: mongoose } = require('mongoose');
 
 const app = express();
 app.use(cors());
+app.use (express.json());
 
-mongoose.connect(process.env.DB_URL);
+const mongoose = require('mongoose');
+// console.nodemonlog(process.env.DB_URL);
 
 const Books = require('./models/book');
+const PORT = process.env.PORT || 3002;
 
 // add validation to confirm we are wired up to our mongo DB
 const db = mongoose.connection;
@@ -19,7 +21,7 @@ db.once('open', function () {
   console.log('Mongoose is connected');
 });
 
-const PORT = process.env.PORT || 3002;
+mongoose.connect(process.env.DB_URL);
 
 app.get('/', (request, response) => {
   response.status(200).send('Welcome!');
@@ -33,7 +35,7 @@ async function getBook(req, res, next) {
     console.log('rESULTS: ', results);
     res.status(200).send(results);
   } catch (err) {
-    next(err)
+    next(err);
   }
 }
 
@@ -42,13 +44,13 @@ app.get('*', (request, response) => {
 });
 
 app.use((error, request, response, next) => {
-  res.status(500).send(error.message);
+  response.status(500).send(error.message);
 });
 
 app.get('/test', (request, response) => {
 
-  response.send('test request received')
+  response.send('test request received');
 
-})
+});
 
 app.listen(PORT, () => console.log(`listening on ${PORT}`));
